@@ -2,7 +2,7 @@ CMPE 255 Final Project
 
 Group 4:
 -Craig Belshe
--Krysle Beaulieu
+-Krysle Beaulieu 007415772
 -Nicolas Rios
 
 Assigned Data:
@@ -11,5 +11,3 @@ https://archive.ics.uci.edu/dataset/117/census+income+kdd
 
 Goal:
 etc...
-
-
