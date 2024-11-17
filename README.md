@@ -2,7 +2,7 @@ CMPE 255 Final Project
 
 Group 4:
 -Craig Belshe
--Krysle Beaulieu
+-Krystle Beaulieu
 -Nicolas Rios
 
 Assigned Data:
