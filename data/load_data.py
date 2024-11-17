@@ -1,6 +1,11 @@
 import pandas as pd
 import argparse
 
+try:
+    from ucimlrepo import fetch_ucirepo 
+except ModuleNotFoundError:
+    print("ucimlrepo not found. Please run pip install ucimlrepo and try this script again.")
+
 def parse_args():
     '''arg parser for running this via command line. Fefaults assume you run this file where it is living'''
     parser = argparse.ArgumentParser()
@@ -15,20 +20,66 @@ def parse_args():
     parser.add_argument('--use_long_name',default=default_long_name, help='use the long name, eg. "class of worker". Else use the short name e.g. "ACLSWKR"')
 
     return parser.parse_args()
-
-def main(train_path, labels_path, test_path,headers_long=True):
-    df_names = pd.read_csv('../data/census-income.names', skiprows=23, nrows=44,header=None,sep="\t",names=["feature",'code1','code2','code3','code4','code5','code6'])
-
-    # use the long name, eg. class of worker. Else use the short name e.g. ACLSWKR
-    if headers_long:
-        names = df_names['feature'].str.split("\| ", expand=True).loc[:,1]
-    else:
-        names = "TODO" # TODO fix the code1-6 bits to collapse it and make it the short names. 
     
-    df = pd.read_csv("../data/census-income.data",delimiter=",",header=None,names=names)
+def load_ucimlrepo():
+    '''
+    Load the data nicely via ucimlrepo. will only load the training data. 
+    
+    Parameters: None
+    
+    Returns: 
+        census_income_kdd: dict
+        dictionary of Census-Income Dta Set for '94, '95
+        Can use census_income_kdd.data.features as training X and census_income_kdd.data.targets as training labels y. 
+        This uses a class for income bucketed as > or < $50,000 income. Taken from "total person income"/"PTOTVAL"
+    '''
+    census_income_kdd = fetch_ucirepo(id=117) 
+    return census_income_kdd
+    
+def load_feature_names(labels_path,headers_long=True):
+    ''' 
+    For manually loading the dataset. Loads feature names from census-income.names
+    
+    Returns: 
+        pandas .dataframe of column names of the train/test set
+    '''
+
+    #c ode1-6 because it is seperated by \t but not the same number of \t of course
+    df_names = pd.read_csv(labels_path, skiprows=23, nrows=44,header=None,sep="\t",names=["feature",'code1','code2','code3','code4','code5','code6'])
+    
+    return df_names
+    
+def main(train_path, labels_path, test_path, headers_long=True):
+    '''
+    load the dataset and print some rows to show it loaded.
+
+    Parameters:
+    
+    train_path: str
+        Path to the census-income.data file
+    labels_path: str
+        Path to the census-income.names file
+    test_path: str
+        Path to the census-income.test file
+    headers_long: bool
+        If True, use the long header like "class of worker". 
+        False will use the short name like "ACLSWKR". 
+        Default is True.
+    '''
+    df_names = load_feature_names(labels_path,use_long_name=True)
+    # use the long name, eg. class of worker. Else use the short name e.g. ACLSWKR
+    if use_long_name:
+        names = df_names['feature'].str.split("\| ", expand=True).loc[:,1]
+    else: 
+        raise NotImplementedError("Whoops. Can't use the short name yet. Not implemented. Please make use_long_name = True. ")
+    
+    df = pd.read_csv(train_path,delimiter=",", header=None, names=names)
     print(df.head())
-    print("TODO, MORE THINGS")
+
+    df_test = pd.read_csv(test_path,delimiter=",", header=None)
+    print(df_test.head())
 
 if __name__=="__main__":
     args = parse_args()
+    print("option 1 to load: manually. Needs the short names fixed. See TODO in main.")
     main(args.train_path,args.labels_path,args.test_path,args.use_long_name)
