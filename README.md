@@ -1,9 +1,9 @@
 # CMPE 255 Final Project
 
 ## Group 4:
--Craig Belshe
--Krystle Beaulieu 007415772
--Nicolas Rios
+- Craig Belshe
+- Krysle Beaulieu 007415772
+- Nicolas Rios 017513691
 
 ## Assigned Data:
 Census-Income Dta Set for '94, '95 - weighted census data from the US Census Bureau

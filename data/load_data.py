@@ -9,9 +9,9 @@ except ModuleNotFoundError:
 def parse_args():
     '''arg parser for running this via command line. Fefaults assume you run this file where it is living'''
     parser = argparse.ArgumentParser()
-    default_train_path = "./census-income.data"
-    default_labels_path = "./census-income.names"
-    default_test_path = "./census-income.test"
+    default_train_path = "data/census-income.data"
+    default_labels_path = "data/census-income.names"
+    default_test_path = "data/census-income.test"
     default_long_name = True
 
     parser.add_argument('--train_path', default=default_train_path, help='path to train data')
@@ -66,9 +66,9 @@ def main(train_path, labels_path, test_path, headers_long=True):
         False will use the short name like "ACLSWKR". 
         Default is True.
     '''
-    df_names = load_feature_names(labels_path,use_long_name=True)
+    df_names = load_feature_names(labels_path,headers_long=True)
     # use the long name, eg. class of worker. Else use the short name e.g. ACLSWKR
-    if use_long_name:
+    if headers_long:
         names = df_names['feature'].str.split("\| ", expand=True).loc[:,1]
     else: 
         raise NotImplementedError("Whoops. Can't use the short name yet. Not implemented. Please make use_long_name = True. ")
