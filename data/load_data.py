@@ -21,7 +21,7 @@ def parse_args():
 
     return parser.parse_args()
     
-def load_ucimlrepo():
+def load_ucimlrepo(ordinal=False):
     '''
     Load the data nicely via ucimlrepo. will only load the training data. 
     
@@ -34,7 +34,16 @@ def load_ucimlrepo():
         This uses a class for income bucketed as > or < $50,000 income. Taken from "total person income"/"PTOTVAL"
     '''
     census_income_kdd = fetch_ucirepo(id=117) 
-    return census_income_kdd
+    df = census_income_kdd.data.features
+    if ordinal:
+
+        from sklearn.preprocessing import OrdinalEncoder
+        for col in df:
+            if df[col].nunique() < 53 or col == 'NOEMP':
+                enc = OrdinalEncoder()
+                df.loc[:,col] = enc.fit_transform(df[[col]])
+
+    return df, census_income_kdd.data.targets
     
 def load_feature_names(labels_path,headers_long=True):
     ''' 
