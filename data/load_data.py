@@ -34,14 +34,16 @@ def load_ucimlrepo(ordinal=False):
         This uses a class for income bucketed as > or < $50,000 income. Taken from "total person income"/"PTOTVAL"
     '''
     census_income_kdd = fetch_ucirepo(id=117) 
+    df = census_income_kdd.data.features
     if ordinal:
-        from sklearn.preprocessing import OrdinalEncoder
-        for col in census_income_kdd:
-            if census_income_kdd[col].nunique() < 53 or col == 'NOEMP':
-                enc = OrdinalEncoder()
-                census_income_kdd.loc[:,col] = enc.fit_transform(census_income_kdd[[col]])
 
-    return census_income_kdd
+        from sklearn.preprocessing import OrdinalEncoder
+        for col in df:
+            if df[col].nunique() < 53 or col == 'NOEMP':
+                enc = OrdinalEncoder()
+                df.loc[:,col] = enc.fit_transform(df[[col]])
+
+    return df, census_income_kdd.data.targets
     
 def load_feature_names(labels_path,headers_long=True):
     ''' 
