@@ -30,17 +30,23 @@ from functools import partial # beacause I want to send in a param to f1 to cros
 import seaborn as sns
 
 # search for the best
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV,GridSearchCV
 #     "criterion":['gini','entropy'],
 #     "min_samples_leaf":[1,2,3,4],
 params = {
-    "n_estimators":[50,100,500,1000],
+    "n_estimators":[100,300,500],
     "max_features":["log2","sqrt",None],
+     "min_samples_leaf":[1,2,3,4],
 }
 oob = partial(f1_score,average='weighted') # because accuracy by default for random forest
 n_jobs = -1
-
-
+# debug
+print(y)
+# end debug
 rf = RandomForestClassifier(oob_score=oob,n_jobs=n_jobs,class_weight='balanced_subsample')
-rf_random = RandomizedSearchCV(estimator = rf, param_distributions = params, n_iter = 20, cv = 3, verbose=4, random_state=42, n_jobs = -1,error_score=0)
-rf_random.fit(X, y)
+# rf_grid = GridSearchCV(estimator = rf, param_distributions = params, n_iter = 20, cv = 3, verbose=4, random_state=42, n_jobs = 3,error_score=0)
+rf_grid = GridSearchCV(estimator = rf, param_grid = params, cv = 3, verbose=4, n_jobs = 3,error_score=0)
+
+rf_grid.fit(X, y)
+print("best params")
+print(rf_grid.best_params_.items())
