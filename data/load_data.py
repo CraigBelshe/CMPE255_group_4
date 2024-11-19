@@ -37,7 +37,7 @@ def load_ucimlrepo(ordinal=False):
     if ordinal:
         from sklearn.preprocessing import OrdinalEncoder
         for col in census_income_kdd:
-            if census_income_kdd[col].nunique() > 52 or col == 'NOEMP':
+            if census_income_kdd[col].nunique() < 53 or col == 'NOEMP':
                 enc = OrdinalEncoder()
                 census_income_kdd.loc[:,col] = enc.fit_transform(census_income_kdd[[col]])
 
