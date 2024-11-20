@@ -135,6 +135,7 @@ F1 Score: 0.6783676682361441
    macro avg       0.64      0.82      0.68     39905
 weighted avg       0.94      0.88      0.90     39905
 
+# adding in a few new features.
 F1 Score: 0.7137353657146304
               precision    recall  f1-score   support
 
