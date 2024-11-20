@@ -54,8 +54,8 @@ def load_feature_names(labels_path,headers_long=True):
     '''
 
     #c ode1-6 because it is seperated by \t but not the same number of \t of course
-    df_names = pd.read_csv(labels_path, skiprows=23, nrows=44,header=None,sep="\t",names=["feature",'code1','code2','code3','code4','code5','code6'])
-    
+    df_names = pd.read_csv(labels_path, skiprows=23, nrows=44,header=None,sep="\t+",names=["feature",'shortname'])
+
     return df_names
     
 def main(train_path, labels_path, test_path, headers_long=True):
@@ -80,7 +80,7 @@ def main(train_path, labels_path, test_path, headers_long=True):
     if headers_long:
         names = df_names['feature'].str.split("\| ", expand=True).loc[:,1]
     else: 
-        raise NotImplementedError("Whoops. Can't use the short name yet. Not implemented. Please make use_long_name = True. ")
+        names = df_names['shortname'].loc[:,1]
     
     df = pd.read_csv(train_path,delimiter=",", header=None, names=names)
     print(df.head())
