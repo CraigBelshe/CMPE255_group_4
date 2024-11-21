@@ -12,7 +12,7 @@ def parse_args():
     default_train_path = "data/census-income.data"
     default_labels_path = "data/census-income.names"
     default_test_path = "data/census-income.test"
-    default_long_name = True
+    default_long_name = False
 
     parser.add_argument('--train_path', default=default_train_path, help='path to train data')
     parser.add_argument('--labels_path', default=default_labels_path, help='path to the .names labels file')
@@ -21,7 +21,7 @@ def parse_args():
 
     return parser.parse_args()
     
-def load_ucimlrepo(ordinal=False):
+def load_ucimlrepo(ordinal=True):
     '''
     Load the data nicely via ucimlrepo. will only load the training data. 
     
@@ -54,7 +54,9 @@ def load_feature_names(labels_path,headers_long=True):
     '''
 
     #c ode1-6 because it is seperated by \t but not the same number of \t of course
+    ignorelist = ['AGI','FEDTAX','PTOTVAL','VETYN','WKSWORK']
     df_names = pd.read_csv(labels_path, skiprows=23, nrows=44,header=None,sep="\t+",names=["feature",'shortname'])
+    df_names = df_names[~df_names['shortname'].isin(ignorelist)]
 
     return df_names
     
@@ -73,19 +75,19 @@ def main(train_path, labels_path, test_path, headers_long=True):
     headers_long: bool
         If True, use the long header like "class of worker". 
         False will use the short name like "ACLSWKR". 
-        Default is True.
+        Default is False.
     '''
     df_names = load_feature_names(labels_path,headers_long=True)
     # use the long name, eg. class of worker. Else use the short name e.g. ACLSWKR
     if headers_long:
         names = df_names['feature'].str.split("\| ", expand=True).loc[:,1]
     else: 
-        names = df_names['shortname'].loc[:,1]
+        names = df_names['shortname']
     
     df = pd.read_csv(train_path,delimiter=",", header=None, names=names)
     print(df.head())
 
-    df_test = pd.read_csv(test_path,delimiter=",", header=None)
+    df_test = pd.read_csv(test_path,delimiter=",", header=None, names=names)
     print(df_test.head())
 
 if __name__=="__main__":

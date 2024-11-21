@@ -32,7 +32,7 @@
 | marital status				AMARITL
 | major industry code				AMJIND
 | major occupation code				AMJOCC
-| mace						ARACE
+| race						ARACE
 | hispanic Origin				AREORGN
 | sex						ASEX
 | member of a labor union			AUNMEM
