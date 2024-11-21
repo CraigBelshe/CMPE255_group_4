@@ -21,7 +21,7 @@ def parse_args():
 
     return parser.parse_args()
     
-def load_ucimlrepo(ordinal=True):
+def load_ucimlrepo(ordinal=True, dropnull = False):
     '''
     Load the data nicely via ucimlrepo. will only load the training data. 
     
@@ -42,6 +42,12 @@ def load_ucimlrepo(ordinal=True):
             if df[col].nunique() < 53 or col == 'NOEMP':
                 enc = OrdinalEncoder()
                 df.loc[:,col] = enc.fit_transform(df[[col]])
+
+    if dropnull:
+        for col in df:
+            if df[col].notnull().any():
+                mode = df[col].dropna().mode()[0]
+                df[col] = df[col].fillna(value=mode)
 
     return df, census_income_kdd.data.targets
     
