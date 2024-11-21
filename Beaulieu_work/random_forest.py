@@ -32,7 +32,7 @@ import seaborn as sns
 from sklearn.model_selection import GridSearchCV
 params = {
     "n_estimators":[100,300,500,700],
-    "max_features":["sqrt"],
+    "max_features":["sqrt",None],
     "min_samples_leaf":[1,50,100,500],
     "criterion":['gini','entropy'],
 }
