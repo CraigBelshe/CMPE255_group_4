@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score, classification_report, f1_score, con
 # import xgboost as xgb
 from catboost import CatBoostClassifier
 from catboost import Pool
+from sklearn.model_selection import GridSearchCV
 # print(xgb.__version__)
   
 # fetch dataset 
@@ -86,13 +87,23 @@ print('finished preprocessing and data split')
 train_pool = Pool(X_train, y_train, cat_features=columns_that_are_categorical)
 test_pool = Pool(X_test, y_test, cat_features=columns_that_are_categorical)
 
-model = CatBoostClassifier(iterations=1000,
-                           depth=6,
-                           learning_rate=0.1,
+# param_grid = {
+#     'depth': [4, 5, 6, 7, 8],
+#     'learning_rate': [0.01, 0.03, 0.1],
+#     'iterations': [100, 200, 300, 500]
+# }
+model = CatBoostClassifier(iterations=500,
+                           depth=12,
+                           learning_rate=0.15,
                            loss_function='Logloss',
                            cat_features=columns_that_are_categorical,
                            task_type="GPU",
                            devices="0")
+# grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, n_jobs=-1, verbose=4)
+# grid_search.fit(train_pool)
+
+# print('best_params', grid_search.best_params_)
+# model = grid_search.best_estimator_
 
 model.fit(train_pool)
 
@@ -119,4 +130,14 @@ for i, v in enumerate(importance):
 
 
 
-# can also try CatBoost since it has a cool name and native support for categorical features.
+"""
+              precision    recall  f1-score   support
+
+           0       0.96      0.99      0.97     37543
+           1       0.65      0.33      0.43      2362
+
+    accuracy                           0.95     39905
+   macro avg       0.81      0.66      0.70     39905
+weighted avg       0.94      0.95      0.94     39905
+
+"""

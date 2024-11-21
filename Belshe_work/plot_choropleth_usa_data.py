@@ -95,7 +95,7 @@ for key in count_dict.keys():
 print(len(states), len(count), states, count)
 data = {
     'state': states,
-    'value': count
+    'frequency': count
 }
 df = pd.DataFrame(data)
 
@@ -104,10 +104,10 @@ fig = px.choropleth(
     df,
     locations='state',
     locationmode='USA-states',
-    color='value',
+    color='frequency',
     scope='usa',
-    title='Previous residence'
+    title='State of Previous Residence 1994-95'
 )
 
 # fig.show()
-pio.write_image(fig, "testmap.png")
+pio.write_image(fig, "choropleth_usa_map.png")

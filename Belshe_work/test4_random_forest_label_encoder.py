@@ -105,3 +105,17 @@ print(f"Accuracy: {accuracy}", f"\nF1 Score: {f1}")
 
 # Print detailed classification report
 print(classification_report(y_test, y_pred))
+
+
+"""
+F1 Score: 0.6332428720194865
+              precision    recall  f1-score   support
+
+           0       0.96      0.93      0.94     37543
+           1       0.26      0.41      0.32      2362
+
+    accuracy                           0.90     39905
+   macro avg       0.61      0.67      0.63     39905
+weighted avg       0.92      0.90      0.91     39905
+
+"""

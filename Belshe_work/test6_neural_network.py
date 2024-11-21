@@ -135,7 +135,7 @@ model = Sequential([
     Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
     Dense(32, activation='relu'),
     Dense(32, activation='relu'),
-    Dense(2, activation='sigmoid')
+    Dense(1, activation='sigmoid')
 ])
 
 opt = keras.optimizers.Adam(learning_rate=0.001, )
@@ -151,7 +151,7 @@ history = model.fit(
     batch_size=32,
     # validation_split=0.2,
     validation_data=(X_test_scaled, y_test),
-    class_weight=class_weight_dict
+    # class_weight=class_weight_dict
 )
 
 y_pred = np.argmax(model.predict(X_test_scaled), axis=-1)  # Get predicted classes
@@ -160,3 +160,16 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
+
+"""
+Really likes to only guess class 0,...
+             precision    recall  f1-score   support
+
+           0       0.94      1.00      0.97     37543
+           1       0.00      0.00      0.00      2362
+
+    accuracy                           0.94     39905
+   macro avg       0.47      0.50      0.48     39905
+weighted avg       0.89      0.94      0.91     39905
+
+"""

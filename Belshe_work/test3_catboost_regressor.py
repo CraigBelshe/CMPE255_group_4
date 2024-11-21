@@ -153,21 +153,35 @@ print(f'RMSE: {rmse:.2f}')
 
 # these metrics wont work
 # Calculate accuracy
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f"Accuracy: {accuracy}")
+y_pred = np.array(y_pred>1200, dtype=int)
+y_test = np.array(y_test>1200, dtype=int)
 
-# # Print out a conf matrix, and a good report of performance from sklearn that look good and include class by class performance and f1 score
-# print(confusion_matrix(y_test, y_pred))
-# print(classification_report(y_test, y_pred))
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy}")
 
-# # Feature importance
-# importance = model.feature_importances_
-# for i, v in enumerate(importance):
-#     print(f"Feature: {X.columns[i]}, Score: {v}")
+# Print out a conf matrix, and a good report of performance from sklearn that look good and include class by class performance and f1 score
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+# Feature importance
+importance = model.feature_importances_
+for i, v in enumerate(importance):
+    print(f"Feature: {X.columns[i]}, Score: {v}")
 
 
 
 """
+[[39349    78]
+ [  361   117]]
+              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99     39427
+           1       0.60      0.24      0.35       478
+
+    accuracy                           0.99     39905
+   macro avg       0.80      0.62      0.67     39905
+weighted avg       0.99      0.99      0.99     39905
+
 
 
 """
