@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import f1_score, accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 import sys
 
@@ -61,4 +61,5 @@ print('F1 score using macro average is: {}'.format(f2))
 print('Accuracy score is: {}'.format(acc))
 print('Percentage of test set predicted to be > 50000: {}'.format(predpercent))
 print('Percentage of total set actually > 50000: {}'.format(truepercent))
+print(classification_report(Ytest, Ypred))
 print(Ypersonal)
