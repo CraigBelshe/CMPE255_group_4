@@ -107,7 +107,7 @@ def feat_selection(X,y,feat_func="chi2"):
         vals = np.where(p_vals<.05)
         print(f"using {len(vals[0])} features that we are confident are important via {feat_func}")
         return vals
-# best_feats(params)
+
 vals = feat_selection(X,y)
 ins = X[X.columns[vals]]
 best_params = find_best_rf(params,ins,y)
