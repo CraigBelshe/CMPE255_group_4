@@ -7,7 +7,7 @@ except ModuleNotFoundError:
     print("ucimlrepo not found. Please run pip install ucimlrepo and try this script again.")
 
 def parse_args():
-    '''arg parser for running this via command line. Fefaults assume you run this file where it is living'''
+    '''arg parser for running this via command line. Defaults assume you run this file where it is living'''
     parser = argparse.ArgumentParser()
     default_train_path = "data/census-income.data"
     default_labels_path = "data/census-income.names"
