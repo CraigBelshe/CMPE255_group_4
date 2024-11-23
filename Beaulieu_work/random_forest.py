@@ -32,7 +32,7 @@ import seaborn as sns
 from sklearn.model_selection import GridSearchCV
 params = {
     "n_estimators":[100,300,500,700],
-    "max_features":["sqrt"],
+    "max_features":["sqrt",None],
     "min_samples_leaf":[1,50,100,500],
     "criterion":['gini','entropy'],
 }
@@ -107,7 +107,7 @@ def feat_selection(X,y,feat_func="chi2"):
         vals = np.where(p_vals<.05)
         print(f"using {len(vals[0])} features that we are confident are important via {feat_func}")
         return vals
-# best_feats(params)
+
 vals = feat_selection(X,y)
 ins = X[X.columns[vals]]
 best_params = find_best_rf(params,ins,y)
