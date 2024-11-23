@@ -9,9 +9,6 @@
 Census-Income Dta Set for '94, '95 - weighted census data from the US Census Bureau
 https://archive.ics.uci.edu/dataset/117/census+income+kdd
 
-## Report Google Doc link
-TBD
-
 ## Goal:
 The goal is to use the demographic data available in the data to determine whether the sample has 
 an income of over $50,000 or under $50,000. This is interesting as it can lead to more information
@@ -31,3 +28,9 @@ All data is located in data/
   - Defaults run our optimal classifier
   - Prints out performance results with the classifiers predictions on group member data
 
+e.g. `python3 histboost_final.py -r 42 -t .3 -l .1`
+
+Default values, e.g. `python3 histboost_final.py`, will run with our winning parameters.
+
+
+See readme in individual folders for how to run individual's code. 

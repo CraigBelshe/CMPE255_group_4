@@ -2,21 +2,12 @@ import argparse
 import pandas as pd
 import numpy as np
 import sys
+from time import time
+
 from sklearn.preprocessing import OrdinalEncoder,LabelEncoder # preproc data
 # allow load_data funcs
 sys.path.append("../data/")
 from load_data import load_ucimlrepo
-
-# load data
-print("loading data...")
-X,y = load_ucimlrepo(True)
-print("loading & encoded.")
-
-# debug
-print("feat keys: ",X.keys())
-print("label keys: ",y.keys())
-# end debug
-
 #feature selection
 from sklearn.feature_selection import chi2
 
@@ -24,21 +15,55 @@ from sklearn.feature_selection import chi2
 from sklearn.ensemble import RandomForestClassifier
 
 # metrics
-from sklearn.metrics import f1_score, ConfusionMatrixDisplay
+from sklearn.metrics import f1_score, ConfusionMatrixDisplay,classification_report
 from functools import partial # beacause I want to send in a param to f1 to cross val
 import seaborn as sns
 
 # search for the best
 from sklearn.model_selection import GridSearchCV
-params = {
+
+# globals
+PARAMS = {
     "n_estimators":[100,300,500,700],
     "max_features":["sqrt",None],
     "min_samples_leaf":[1,50,100,500],
     "criterion":['gini','entropy'],
 }
 
+PARAMS_SMALL={
+    "n_estimators":[100],
+    "max_features":["sqrt",None]
+}
 
+def parse_args():
+    '''Arg parser for running this via command line. Defaults assume you run this file where it is living'''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--small_param', type=bool, default=True, help='True or False: run on the small set of parameters for grid search. True if you want it to run faster. False if you want original run results.')
+    parser.add_argument('-n', '--n_jobs', type=int, default=-1, help='number of jobs to use. -1 for all, else use a positive number e.g. 8. Defaults to -1.')
 
+    return parser.parse_args()
+
+def load_data():
+    ''' load the data via ucimlrepo func. will ordinal encode
+    
+    Returns:
+    X: pandas df
+    entire training set loaded by ucimlrepo
+    
+    y: pandas df
+    entire training label set loaded by ucimlrepo'''
+    
+    # load data
+    print("loading data...")
+    X,y = load_ucimlrepo(True)
+    print("loading & encoded.")
+
+    # debug
+    print("feat keys: ",X.keys())
+    print("label keys: ",y.keys())
+    # end debug
+    return X,y
+    
 def find_best_rf(params, X,y, n_jobs=-1, usef1=True):
     '''
     find the best random forest given a set of params.
@@ -70,11 +95,13 @@ def find_best_rf(params, X,y, n_jobs=-1, usef1=True):
     print("best params")
     print(rf_grid.best_params_.items())
     
-    mdi_importances = pd.Series(rf_grid[-1].feature_importances_,).sort_values(ascending=True)
-    print("imporantces of best rf: ",np.where(mdi_importances!=0))
+    mdi_importances = pd.Series(rf_grid.best_estimator_[-1].feature_importances_,).sort_values(ascending=False)
+    print("imporantances of best rf: ",mdi_importances)
+    
+    print(classification_report(y,rf_grid.predict(ins)))
     return rf_grid.best_params_.items()
 
-def best_feats(X,y,n_jobs = -1,):
+def best_feats(X,y,n_jobs = -1):
     ''' use a single random forest setup and get its best features.
     
     Parameters
@@ -107,13 +134,26 @@ def feat_selection(X,y,feat_func="chi2"):
         vals = np.where(p_vals<.05)
         print(f"using {len(vals[0])} features that we are confident are important via {feat_func}")
         return vals
-
-vals = feat_selection(X,y)
-ins = X[X.columns[vals]]
-best_params = find_best_rf(params,ins,y)
+    else:
+        raise NotImplementedError("only allows for chi2 currently")
 
 
 
 
-# _ = best_feats(X[cols],y)
-# SO many (macro/weighted f1, accuracy) runs have this a the best option: dict_items([('max_features', 'sqrt'), ('min_samples_leaf', 1), ('n_estimators', 500)])
+
+if __name__ == "__main__":
+    start = time()
+    args = parse_args()
+    X,y = load_data()
+    print("will use feature selection then grid search to find best rf on those best features using chi2 where p<.05 features")
+    vals = feat_selection(X,y)
+    ins = X[X.columns[vals]]
+    if args.small_param:
+        best_params = find_best_rf(PARAMS_SMALL,ins,y,args.n_jobs)
+    else:
+        best_params = find_best_rf(PARAMS,ins,y,args.n_jobs)
+    end = time()
+    print("done")
+    print(f"time taken: {end - start:.03f}s")
+
+# SO many (macro/weighted f1, accuracy) full runs have this a the best option: dict_items([('max_features', 'sqrt'), ('min_samples_leaf', 1), ('n_estimators', 500)])

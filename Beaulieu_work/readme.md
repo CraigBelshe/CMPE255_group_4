@@ -1,13 +1,26 @@
 # How to run files
 
 ## random_forest.py
-`python3 random_forest.py --find_best`
+see `python3 random_forest.py --help` for more info but some examples to run are below:
 
-will find the best random forest out of a set of parameters via grid search
-(parameters are hard coded, see parms inside .py file for details)
+1) `python3 random_forest.py -s True -n -1`
+
+will use a smaller set of data to run faster (in <2 mins on an AMD 5950x). Uses all available cpu power for running this script.
+
+chi2 to grab top features. 
+
+grid search to find best rf.
+
+will spit out top features from that then show some scores for the classes like f1 and accuracy.
 
 or
 
-`python3 random_forest.py` 
+2) `python3 random_forest.py` 
 
-will train on the training dataset with bootstrap and one of the common best params (500 est, entropy, 1 min leaf, sqrt max feat)
+will use whole set of data to run more accurately (in 10s of minutes kind of range).
+
+chi2 to grab top features. 
+
+grid search to find best rf.
+
+will spit out top features from that then show some scores for the classes like f1 and accuracy.
