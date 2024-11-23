@@ -2,7 +2,7 @@
 
 ## Group 4:
 - Craig Belshe 017510974
-- Krysle Beaulieu 007415772
+- Krystle Beaulieu 007415772
 - Nicolas Rios 017513691
 
 ## Assigned Data:
